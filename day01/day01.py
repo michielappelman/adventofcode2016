@@ -21,11 +21,11 @@ def move(coords, direction, step):
     for _ in range(step):
         if direction == 0: # North
             coords[1] += 1
-        if direction == 1: # East
+        elif direction == 1: # East
             coords[0] += 1
-        if direction == 2: # South
+        elif direction == 2: # South
             coords[1] -= 1
-        if direction == 3: # West
+        elif direction == 3: # West
             coords[0] -= 1
         if str(coords) in VISITED:
             print("Visited already: {}, dist: {}".format(str(coords), calc_distance(coords)))
