@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Day 1: ."""
+"""Day 1: No Time for a Taxicab."""
 
 import re
 
@@ -16,44 +16,22 @@ def calc_distance(coords):
     """Calculates the taxicab distance of point on a grid."""
     return abs(coords[0]) + abs(coords[1])
 
-def north(coords, step):
+def move(coords, direction, step):
     """Return new coordinates after moving some steps to the direction."""
     for _ in range(step):
-        coords[1] += 1
+        if direction == 0: # North
+            coords[1] += 1
+        if direction == 1: # East
+            coords[0] += 1
+        if direction == 2: # South
+            coords[1] -= 1
+        if direction == 3: # West
+            coords[0] -= 1
         if str(coords) in VISITED:
             print("Visited already: {}, dist: {}".format(str(coords), calc_distance(coords)))
         VISITED.append(str(coords))
     return coords
 
-def east(coords, step):
-    """Return new coordinates after moving some steps to the direction."""
-    for _ in range(step):
-        coords[0] += 1
-        if str(coords) in VISITED:
-            print("Visited already: {}, dist: {}".format(str(coords), calc_distance(coords)))
-        VISITED.append(str(coords))
-    return coords
-
-def south(coords, step):
-    """Return new coordinates after moving some steps to the direction."""
-    for _ in range(step):
-        coords[1] -= 1
-        if str(coords) in VISITED:
-            print("Visited already: {}, dist: {}".format(str(coords), calc_distance(coords)))
-        VISITED.append(str(coords))
-    return coords
-
-def west(coords, step):
-    """Return new coordinates after moving some steps to the direction."""
-    for _ in range(step):
-        coords[0] -= 1
-        if str(coords) in VISITED:
-            print("Visited already: {}, dist: {}".format(str(coords), calc_distance(coords)))
-        VISITED.append(str(coords))
-    return coords
-
-
-FUNCTIONS = [north, east, south, west]
 VISITED = []
 
 def main():
@@ -67,7 +45,7 @@ def main():
             heading = (heading - 1) % 4
         elif direction == "R":
             heading = (heading + 1) % 4
-        position = FUNCTIONS[heading](position, steps)
+        position = move(position, heading, steps)
 
     print("Final position: {}, dist: {}".format(str(position), calc_distance(position)))
 
