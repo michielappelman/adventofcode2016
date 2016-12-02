@@ -28,13 +28,16 @@ class Keypad:
     def __init__(self, keypad_definition):
         self.keypad = []
         for line in keypad_definition.split('\n'):
-            self.keypad.append([num for num in line.split()])
+            self.keypad.append([num if num != "x" else None for num in line.split()])
 
     def __repr__(self):
         composed = ""
         for i, row in enumerate(self.keypad):
             for num in row:
-                composed += "{} ".format(num)
+                if num is None:
+                    composed += "  "
+                else:
+                    composed += "{} ".format(num)
             if i != len(self.keypad) - 1:
                 composed += "\n"
         return composed
@@ -61,16 +64,16 @@ class Keypad:
         row, col = self._button_to_position(start)
         for instruction in instructions:
             if (instruction == 'L' and col > 0
-                    and self._position_to_button([row, col-1]) != "x"):
+                    and self._position_to_button([row, col-1]) is not None):
                 col -= 1
             elif (instruction == 'R' and col < len(self.keypad[0]) - 1
-                  and self._position_to_button([row, col+1]) != "x"):
+                  and self._position_to_button([row, col+1]) is not None):
                 col += 1
             elif (instruction == 'U' and row > 0
-                  and self._position_to_button([row-1, col]) != "x"):
+                  and self._position_to_button([row-1, col]) is not None):
                 row -= 1
             elif (instruction == 'D' and row < len(self.keypad) -1
-                  and self._position_to_button([row+1, col]) != "x"):
+                  and self._position_to_button([row+1, col]) is not None):
                 row += 1
         return self._position_to_button([row, col])
 
