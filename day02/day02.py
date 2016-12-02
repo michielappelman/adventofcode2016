@@ -7,6 +7,13 @@ KEYPAD = """\
 1 2 3
 4 5 6
 7 8 9"""
+KEYPAD2 = """\
+x x 1 x x
+x 2 3 4 x
+5 6 7 8 9
+x A B C x
+x x D x x"""
+KEYPADS = [KEYPAD, KEYPAD2]
 
 class ButtonNotFound(Exception):
     """Raised when a button is not on the keypad."""
@@ -21,7 +28,7 @@ class Keypad:
     def __init__(self, keypad_definition):
         self.keypad = []
         for line in keypad_definition.split('\n'):
-            self.keypad.append([int(num) for num in line.split()])
+            self.keypad.append([num for num in line.split()])
 
     def __repr__(self):
         composed = ""
@@ -48,18 +55,22 @@ class Keypad:
         except IndexError:
             return None
 
-    def button_from_instructions(self, instructions, start=5):
+    def button_from_instructions(self, instructions, start="5"):
         """Takes a set of instructions and a optional starting number and
         finds the resulting button."""
         row, col = self._button_to_position(start)
         for instruction in instructions:
-            if instruction == 'L' and col > 0:
+            if (instruction == 'L' and col > 0
+                    and self._position_to_button([row, col-1]) != "x"):
                 col -= 1
-            elif instruction == 'R' and col < len(self.keypad[0]) -1:
+            elif (instruction == 'R' and col < len(self.keypad[0]) - 1
+                  and self._position_to_button([row, col+1]) != "x"):
                 col += 1
-            elif instruction == 'U' and row > 0:
+            elif (instruction == 'U' and row > 0
+                  and self._position_to_button([row-1, col]) != "x"):
                 row -= 1
-            elif instruction == 'D' and row < len(self.keypad) -1:
+            elif (instruction == 'D' and row < len(self.keypad) -1
+                  and self._position_to_button([row+1, col]) != "x"):
                 row += 1
         return self._position_to_button([row, col])
 
@@ -67,14 +78,15 @@ def main():
     """Main function."""
     with open(INPUT_FILE, 'r') as f:
         instructions = [line.strip() for line in f]
-    keypad = Keypad(KEYPAD)
-    start = 5
-    combination = ""
-    for line in instructions:
-        new = keypad.button_from_instructions(line, start=start)
-        combination += str(new)
-        start = new
-    print(combination)
+    for pad in KEYPADS:
+        keypad = Keypad(pad)
+        start = "5"
+        combination = ""
+        for line in instructions:
+            new = keypad.button_from_instructions(line, start=start)
+            combination += new
+            start = new
+        print(combination)
 
 if __name__ == "__main__":
     main()
