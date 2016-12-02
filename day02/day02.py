@@ -3,7 +3,7 @@
 """Day 2: Bathroom Security."""
 
 INPUT_FILE = "day02_input.txt"
-KEYPAD = """\
+KEYPAD1 = """\
 1 2 3
 4 5 6
 7 8 9"""
@@ -13,7 +13,6 @@ x 2 3 4 x
 5 6 7 8 9
 x A B C x
 x x D x x"""
-KEYPADS = [KEYPAD, KEYPAD2]
 
 class ButtonNotFound(Exception):
     """Raised when a button is not on the keypad."""
@@ -79,10 +78,12 @@ class Keypad:
 
 def main():
     """Main function."""
+    keypads = [Keypad(KEYPAD1), Keypad(KEYPAD2)]
+
     with open(INPUT_FILE, 'r') as f:
         instructions = [line.strip() for line in f]
-    for pad in KEYPADS:
-        keypad = Keypad(pad)
+
+    for keypad in keypads:
         start = "5"
         combination = ""
         for line in instructions:
