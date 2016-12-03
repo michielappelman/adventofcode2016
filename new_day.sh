@@ -26,12 +26,17 @@ import re
 
 INPUT_FILE = "${DAYNAME}_input.txt"
 
-with open(INPUT_FILE, 'r') as f:
-    for line in f:
-        pattern = '^.*$'
-        result = re.match(pattern, line)
-        print(result.groups())
+def main():
+    with open(INPUT_FILE, 'r') as f:
+        for line in f:
+            pattern = '^.*$'
+            result = re.match(pattern, line)
+            print(result.groups())
+    # with open(INPUT_FILE, 'r') as input_file:
+        # instructions = [line.strip() for line in input_file]
 
+if __name__ == "__main__":
+    main()
 EOF
 
 touch ${DAYNAME}_input.txt
