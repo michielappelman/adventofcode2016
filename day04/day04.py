@@ -16,6 +16,15 @@ def valid_room(room_name, checksum):
     string_most_common = "".join([c[0] for c in most_common[:5]])
     return string_most_common == checksum
 
+def rotate_alphabet(character, number):
+    char_number = ord(character) - 97
+    rotated = ((char_number + number) % 26) + 97
+    return chr(rotated)
+
+def decrypt_room_name(room_name, sector_id):
+    rotated = ["".join([rotate_alphabet(char, sector_id) for char in part]) for part in room_name]
+    return "-".join(rotated)
+
 def main():
     rooms = []
     with open(INPUT_FILE, 'r') as input_file:
@@ -29,7 +38,10 @@ def main():
     for room in rooms:
         if valid_room(room[0], room[2]):
             sector_sum += room[1]
-    print(sector_sum)
+            decrypted = decrypt_room_name(room[0], room[1])
+            if "north" in decrypted:
+                print("Sector ID: ", decrypted, room[1])
+    print("Sum: ", sector_sum)
 
 if __name__ == "__main__":
     main()
