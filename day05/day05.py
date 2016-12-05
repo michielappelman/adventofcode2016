@@ -19,5 +19,18 @@ def main():
         i += 1
     print(password)
 
+    password = list("xxxxxxxx")
+    i = 0
+    while "x" in password:
+        incremental_md5 = md5hash.copy()
+        incremental_md5.update(str(i).encode('utf-8'))
+        if (incremental_md5.hexdigest().startswith("00000") and
+                incremental_md5.hexdigest()[5].isdigit() and
+                int(incremental_md5.hexdigest()[5]) < 8 and
+                password[int(incremental_md5.hexdigest()[5])] == "x"):
+            password[int(incremental_md5.hexdigest()[5])] = incremental_md5.hexdigest()[6]
+        i += 1
+    print("".join(password))
+
 if __name__ == "__main__":
     main()
