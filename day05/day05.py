@@ -3,34 +3,36 @@
 """Day 5: How About a Nice Game of Chess?"""
 
 from hashlib import md5
+from sys import stdout
 
 INPUT = "abbhdwsy"
 
 def main():
-    password = ""
+    password_part1 = [None] * 8
+    password_part2 = [None] * 8
     i = 0
-    md5hash = md5()
-    md5hash.update(INPUT.encode('utf-8'))
-    while len(password) < 8:
-        incremental_md5 = md5hash.copy()
-        incremental_md5.update(str(i).encode('utf-8'))
-        if incremental_md5.hexdigest().startswith("00000"):
-            password += incremental_md5.hexdigest()[5]
+    found = 0
+    while not all(password_part1 + password_part2):
+        md5hash = md5()
+        md5hash.update(INPUT.encode() + str(i).encode())
+        hexdigest = md5hash.hexdigest()
+        if hexdigest.startswith("00000"):
+            if found < 8:
+                password_part1[found] = hexdigest[5]
+                found += 1
+            if (hexdigest[5].isdigit() and int(hexdigest[5]) < 8 and
+                    password_part2[int(hexdigest[5])] is None):
+                password_part2[int(hexdigest[5])] = hexdigest[6]
+        if i % 50000 == 0:
+            pw1 = [hexdigest[p] if c is None else c for p, c in enumerate(password_part1)]
+            pw2 = [hexdigest[p] if c is None else c for p, c in enumerate(password_part2)]
+            msg = "PW1: {} -- PW2: {}\r".format("".join(pw1), "".join(pw2))
+            stdout.write(msg)
+            stdout.flush()
         i += 1
-    print(password)
-
-    password = list("xxxxxxxx")
-    i = 0
-    while "x" in password:
-        incremental_md5 = md5hash.copy()
-        incremental_md5.update(str(i).encode('utf-8'))
-        if (incremental_md5.hexdigest().startswith("00000") and
-                incremental_md5.hexdigest()[5].isdigit() and
-                int(incremental_md5.hexdigest()[5]) < 8 and
-                password[int(incremental_md5.hexdigest()[5])] == "x"):
-            password[int(incremental_md5.hexdigest()[5])] = incremental_md5.hexdigest()[6]
-        i += 1
-    print("".join(password))
+    msg = "PW1: {} -- PW2: {}\r".format("".join(password_part1), "".join(password_part2))
+    stdout.write(msg)
+    stdout.flush()
 
 if __name__ == "__main__":
     main()
