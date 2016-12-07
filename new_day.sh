@@ -41,4 +41,3 @@ EOF
 
 touch ${DAYNAME}_input.txt
 
-vi -p ${DAYNAME}_input.txt ${DAYNAME}.py 

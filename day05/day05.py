@@ -12,7 +12,7 @@ def main():
     password_part2 = [None] * 8
     i = 0
     found = 0
-    while not all(password_part1 + password_part2):
+    while None in password_part1 + password_part2:
         md5hash = md5()
         md5hash.update(INPUT.encode() + str(i).encode())
         hexdigest = md5hash.hexdigest()
