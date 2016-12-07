@@ -23,19 +23,16 @@ class IPv7Address(object):
             else:
                 self.hypernets.append(part)
 
-    def __repr__(self):
-        return "IPv4Address('{}')".format(self._format_address())
-
     def __str__(self):
-        return "{}".format(self._format_address())
-
-    def _format_address(self):
         combined = zip(self.supernets, self.hypernets)
         address_string = ""
         for pair in combined:
             address_string += "{}[{}]".format(*pair)
         address_string += self.supernets[-1]
         return address_string
+
+    def __repr__(self):
+        return "IPv7Address('{}')".format(self)
 
     @classmethod
     def _reverse(cls, string):
