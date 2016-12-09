@@ -28,9 +28,7 @@ class Display:
         return "Display({}, {})".format(self.width, self.height)
 
     def rectangle_on(self, width, height):
-        for i in range(height):
-            for j in range(width):
-                self.display_matrix[i][j] = True
+        self.display_matrix[:height, :width] = True
 
     def rotate_column(self, column_index, places):
         self.display_matrix[:, column_index] = np.roll(self.display_matrix[:, column_index], places)
@@ -52,7 +50,7 @@ def main():
             display.rectangle_on(width, height)
         elif instr.startswith("rotate"):
             direction = instr.split()[1]
-            index = int(instr.split('=')[1].split()[0])
+            index = int(instr.split()[2][2:])
             places = int(instr.split()[4])
             if direction == "row":
                 display.rotate_row(index, places)
