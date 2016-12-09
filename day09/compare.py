@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import time
+import timeit
 
 """Day 9: Explosives in Cyberspace."""
 
@@ -75,22 +75,18 @@ def star2(data):
     return data_length
 
 def main():
-    with open(INPUT_FILE, 'r') as input_file:
-        compressed_files = [line.strip() for line in input_file]
-    string = compressed_files[0]
+    setup_general = """with open("day09_input.txt", 'r') as input_file:
+    string = input_file.read().strip()\n"""
+    number = 100
 
     # mappelma
-    time_a1 = time.time()
-    mappelma = CompressedFile(string)
-    length_a = mappelma.decompress_length_v2()
-    time_a2 = time.time()
-    print("mappelma: {} in {:0.3f} ms".format(length_a, (time_a2-time_a1)*1000.0))
+    setup_mappelma = setup_general + "from __main__ import CompressedFile"
+    print(timeit.timeit('CompressedFile(string).decompress_length_v2()',
+                        setup=setup_mappelma, number=number))
 
     # dvanhelm
-    time_d1 = time.time()
-    length_d = star2(string)
-    time_d2 = time.time()
-    print("dvanhelm: {} in {:0.3f} ms".format(length_d, (time_d2-time_d1)*1000.0))
+    setup_dvanhelm = setup_general + "from __main__ import star2"
+    print(timeit.timeit('star2(string)', setup=setup_dvanhelm, number=number))
 
 if __name__ == "__main__":
     main()
