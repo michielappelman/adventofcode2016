@@ -74,6 +74,34 @@ def star2(data):
             data_length = data_length + (star2(rep_sec) * int(b))
     return data_length
 
+def decode2(line):
+    '''
+    Decode a line
+    Had to move away from regex as it was taking ages
+    :return: decoded string
+    '''
+    #data = list(line)
+    data = line
+    len_line = 0
+    while True:
+        # splits the sequence in 2, before the marker and after
+        split = data.split(sep='(', maxsplit=1)
+        len_line += len(split[0])
+        try:
+            data = split[1]
+            # marker = (<x>x<y>)
+            # x is the string before the 'x'
+            x, data = data.split(sep='x', maxsplit=1)
+            x = int(x)
+            # y is the string before the ')'
+            y, data = data.split(sep=')', maxsplit=1)
+            y = int(y)
+            len_line+= y * decode2(data[:x])
+            data = data[x:]
+        except IndexError:
+            # no marker, end of loop
+            return len_line
+
 def main():
     setup_general = """with open("day09_input.txt", 'r') as input_file:
     string = input_file.read().strip()\n"""
@@ -81,12 +109,16 @@ def main():
 
     # mappelma
     setup_mappelma = setup_general + "from __main__ import CompressedFile"
-    print(timeit.timeit('CompressedFile(string).decompress_length_v2()',
-                        setup=setup_mappelma, number=number))
+    print("mappelma:", timeit.timeit('CompressedFile(string).decompress_length_v2()',
+                                     setup=setup_mappelma, number=number))
 
     # dvanhelm
     setup_dvanhelm = setup_general + "from __main__ import star2"
-    print(timeit.timeit('star2(string)', setup=setup_dvanhelm, number=number))
+    print("dvanhelm:", timeit.timeit('star2(string)', setup=setup_dvanhelm, number=number))
+
+    # rmartini
+    setup_rmartini = setup_general + "from __main__ import decode2"
+    print("rmartini:", timeit.timeit('decode2(string)', setup=setup_rmartini, number=number))
 
 if __name__ == "__main__":
     main()
