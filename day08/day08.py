@@ -37,7 +37,7 @@ class Display:
         self.display_matrix[row_index, :] = np.roll(self.display_matrix[row_index, :], places)
 
     def lit(self):
-        return np.count_nonzero(self.display_matrix)
+        return self.display_matrix.sum()
 
 def main():
     with open(INPUT_FILE, 'r') as input_file:
