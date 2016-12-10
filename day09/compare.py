@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import timeit
+import re
 
 """Day 9: Explosives in Cyberspace."""
 
@@ -102,6 +103,30 @@ def decode2(line):
             # no marker, end of loop
             return len_line
 
+def decompress_markers(line):
+    uncompressed_length = 0
+    it = re.finditer(r'\(([0-9]+x[0-9]+)\)', line)
+    start = 0
+    for patt in it:
+        if start > patt.start(): # previous iteration went over this marker
+            continue
+        if start < patt.start():
+            uncompressed_length += decompress_markers(line[start:patt.start()]) # /!\ I was skipping this. If the new pattern is further than the previous uncompression length
+        numbers = patt.group(1).split('x')
+        str_len_to_unc = int(numbers[0])
+        times_to_unc = int(numbers[1])
+
+        uncompressed_length += decompress_markers(line[patt.end():patt.end() + str_len_to_unc]) * times_to_unc
+        start = patt.end() + str_len_to_unc
+
+    uncompressed_length += len(line[start:]) # add trailing chars in line
+    return uncompressed_length
+
+def pilewyll(string):
+    decompressed_length = 0
+    for line in string:
+        decompressed_length += decompress_markers(line)
+
 def main():
     setup_general = """with open("day09_input.txt", 'r') as input_file:
     string = input_file.read().strip()\n"""
@@ -114,11 +139,18 @@ def main():
 
     # dvanhelm
     setup_dvanhelm = setup_general + "from __main__ import star2"
-    print("dvanhelm:", timeit.timeit('star2(string)', setup=setup_dvanhelm, number=number))
+    print("dvanhelm:", timeit.timeit('star2(string)',
+                                     setup=setup_dvanhelm, number=number))
 
     # rmartini
     setup_rmartini = setup_general + "from __main__ import decode2"
-    print("rmartini:", timeit.timeit('decode2(string)', setup=setup_rmartini, number=number))
+    print("rmartini:", timeit.timeit('decode2(string)',
+                                     setup=setup_rmartini, number=number))
+
+    # pilewyll
+    setup_pilewyll = setup_general + "from __main__ import decompress_markers\nimport re"
+    print("pilewyll:", timeit.timeit('decompress_markers(string)',
+                                     setup=setup_pilewyll, number=number))
 
 if __name__ == "__main__":
     main()
