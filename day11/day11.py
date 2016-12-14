@@ -41,8 +41,6 @@ def get_next_moves(current, count, floors):
         if new_floor > 3 or new_floor < 0:
             continue
 
-        move_sets.sort(key=lambda x: (delta * len(x)))
-
         for combi in move_sets:
             next_floors = dict(floors)
             next_floors[current] = list(set(floors[current]) - set(combi))
@@ -61,12 +59,9 @@ def search(init, goal):
 
     seen.add((0, tuple(combine_pairs(init))))
 
-    move_count = 0
     while next_moves:
         next_move = next_moves.pop(0)
         floor, distance, floors = next_move
-        # if distance > move_count:
-            # move_count = distance
         if len(floors[3]) == goal:
             return distance
         next_moves.extend(get_next_moves(floor, distance, floors))
