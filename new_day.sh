@@ -18,7 +18,7 @@ fi
 mkdir $DAYNAME
 cd $DAYNAME
 cat <<EOF > ${DAYNAME}.py 
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """Day ${day}: ."""
 
@@ -39,5 +39,5 @@ if __name__ == "__main__":
     main()
 EOF
 
-touch ${DAYNAME}_input.txt
+touch ${DAYNAME}_input.txt ${DAYNAME}x_input.txt
 
