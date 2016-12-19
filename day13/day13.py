@@ -3,6 +3,7 @@
 """Day 13: A Maze of Twisty Little Cubicles."""
 
 seen = set()
+locations_seen = set()
 
 def is_wall(x, y, song):
     calculate = (x*x + 3*x + 2*x*y + y + y*y) + song
@@ -21,6 +22,7 @@ def get_next_moves(x, y, song, distance):
         if move not in seen:
             moves.append(move)
         seen.add(move)
+        locations_seen.add(tuple(way))
     return moves
 
 def search(song, goal):
@@ -31,8 +33,9 @@ def search(song, goal):
 
     while next_moves:
         next_move = next_moves.pop(0)
-        print(next_move)
         x, y, distance = next_move
+        if distance == 50:
+            print(len(locations_seen))
         if [x, y] == goal:
             return distance
         next_moves.extend(get_next_moves(x, y, song, distance))
