@@ -20,11 +20,9 @@ def main():
     discs.append(Disc(7, 11, 0))
 
     button_time = 0
-    found = False
-    while not found:
-        found = all([True if ((button_time + disc.number) + disc.start_pos) % disc.positions == 0 else False for disc in discs])
+    while not all([True if ((button_time + disc.number) + disc.start_pos) % disc.positions == 0 else False for disc in discs]):
         button_time += 1
-    print(button_time - 1)
+    print(button_time)
 
 if __name__ == "__main__":
     main()
