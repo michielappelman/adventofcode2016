@@ -37,10 +37,24 @@ def find_path(passcode):
             return path
         next_moves.extend(get_next_moves(passcode, path, location))
 
+def find_longest_path(passcode):
+    next_moves = []
+    next_moves.extend(get_next_moves(passcode, "", (1, 1)))
+
+    while next_moves:
+        path, location = next_moves.pop(0)
+        for nm in get_next_moves(passcode, path, location):
+            if nm[1] == (4, 4):
+                longest = len(path) + 1
+            else:
+                next_moves.append(nm)
+    return longest
+
 def main():
     for passcode in INPUT:
-        path = find_path(passcode)
-        print(f"{passcode}: {path}")
+        shortest_path = find_path(passcode)
+        longest = find_longest_path(passcode)
+        print(f"{passcode} - shortest path: {shortest_path}, longest length: {longest}")
 
 if __name__ == "__main__":
     main()
