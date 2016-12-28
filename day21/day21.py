@@ -26,7 +26,7 @@ def scrambler(plain, instructions):
             neg = -1
         ring = deque(text)
         ring.rotate(rotate * neg)
-        return "".join(list(ring))
+        return "".join(ring)
 
     def move(text, instruction):
         text = list(text)
