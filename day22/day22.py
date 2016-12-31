@@ -55,15 +55,15 @@ class Grid:
 
     def get_next_moves(self):
         new_poss = []
-        for dest in (self.hole - 1, self.hole + 1): # Left and Right
-            if dest // self.width == self.hole // self.width: # are in same row
+        for dest in (self.hole - 1, self.hole + 1):  # Left and Right
+            if dest // self.width == self.hole // self.width:  # are in same row
                 new_poss.append(dest)
-        for dest in (self.hole - self.width, self.hole + self.width): # Up and Down
+        for dest in (self.hole - self.width, self.hole + self.width):  # Up and Down
             if 0 <= dest < len(self.nodes):
                 new_poss.append(dest)
         valid_new_poss = []
         for pos in new_poss:
-            if self.nodes[pos].in_use < 90:
+            if self.nodes[pos].used < self.nodes[self.hole].avail:
                 valid_new_poss.append(pos)
         yield from valid_new_poss
 
