@@ -15,9 +15,9 @@ class Grid:
         self.nodes = sorted(nodes, key=lambda n: (n.y, n.x))
         self.width = max(nodes, key=lambda n: n.x).x + 1
         self.hole = self._find_empty()
-        self.goal = self._coord_to_position(goal)
+        self.goal = self._coord_to_pos(goal)
 
-    def _coord_to_position(self, coords):
+    def _coord_to_pos(self, coords):
         return coords[0] + coords[1] * self.width
 
     def _pos_to_coord(self, pos):
@@ -25,7 +25,7 @@ class Grid:
         return (pos - y * self.width, y)
 
     def solved(self, goal):
-        if self.hole == self._coord_to_position(goal):
+        if self.hole == self._coord_to_pos(goal):
             return True
         return False
     
