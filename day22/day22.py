@@ -24,10 +24,9 @@ class Grid:
         y = pos // self.width
         return (pos - y * self.width, y)
 
-    def solved(self, goal):
-        if self.hole == self._coord_to_pos(goal):
-            return True
-        return False
+    @property
+    def solved(self):
+        return self.hole == self.goal
 
     @property
     def viable_pairs(self):
@@ -89,14 +88,14 @@ def shortest_datapath(start, goal=(0, 0)):
 
     next_moves = []
     next_moves.append((0, start))
-    if start.solved(goal):
+    if start.solved:
         return next_moves.pop()
 
     while next_moves:
         next_move = next_moves.pop(0)
         steps, grid = next_move
         if grid.hole not in seen:
-            if grid.solved(goal):
+            if grid.solved:
                 return steps
             for destination in grid.get_next_moves():
                 next_moves.append((steps + 1, grid.move(destination, goal)))
