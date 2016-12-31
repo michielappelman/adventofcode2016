@@ -28,6 +28,14 @@ class Grid:
         if self.hole == self._coord_to_position(goal):
             return True
         return False
+    
+    @property
+    def viable_pairs(self):
+        viable_pair_count = 0
+        for pair in permutations(self.nodes, 2):
+            if pair[0].used != 0 and pair[0].used < pair[1].avail:
+                viable_pair_count += 1
+        return viable_pair_count
 
     def __str__(self):
         string_display = ""
@@ -104,13 +112,8 @@ def main():
             result = re.match(pattern, line)
             nodes.append(Node(*[int(c) for c in result.groups()]))
 
-    viable_pair_count = 0
-    for pair in permutations(nodes, 2):
-        if pair[0].used != 0 and pair[0].used < pair[1].avail:
-            viable_pair_count += 1
-    print("Star 1:", viable_pair_count)
-
     grid = Grid(nodes)
+    print("Star 1:", grid.viable_pairs)
     steps = shortest_datapath(start=grid, goal=(grid.width - 1, 0))
     print("Star 2:", steps + (5 * (grid.width - 2)))
 
