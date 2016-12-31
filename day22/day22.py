@@ -28,7 +28,7 @@ class Grid:
         if self.hole == self._coord_to_pos(goal):
             return True
         return False
-    
+
     @property
     def viable_pairs(self):
         viable_pair_count = 0
@@ -63,7 +63,6 @@ class Grid:
                 new_poss.append(dest)
         valid_new_poss = []
         for pos in new_poss:
-            # if self.nodes[self.hole].avail > self.nodes[pos].used and self.nodes[pos].used < 100:
             if self.nodes[pos].in_use < 90:
                 valid_new_poss.append(pos)
         yield from valid_new_poss
