@@ -14,7 +14,7 @@ class AirductMap:
         return self._map_to_string(self.map)
 
     def __repr__(self):
-        return str(self)
+        return f"{type(self).__name__}('{str(self)}')"
 
     def __hash__(self):
         return hash(self.map)
