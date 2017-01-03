@@ -3,7 +3,6 @@
 """Day 24: Air Duct Spelunking."""
 
 INPUT_FILE = "day24_input.txt"
-# INPUT_FILE = "day24x_input.txt"
 
 class AirductMap:
     def __init__(self, description):
@@ -44,16 +43,6 @@ class AirductMap:
         moved_map[self.position], moved_map[dest] = ".", "0"
         return AirductMap(self._map_to_string("".join(moved_map)))
 
-class AirductMapFullCoverage(AirductMap):
-    @property
-    def solved(self):
-        return '.' not in self.map and sum(char.isdigit() for char in self.map) == 1
-
-    def move(self, dest):
-        moved_map = list(self.map)
-        moved_map[self.position], moved_map[dest] = "x", "0"
-        return AirductMapFullCoverage(self._map_to_string("".join(moved_map)))
-
 class AirductMapFindPosition(AirductMap):
     def __init__(self, description, to_pos):
         self.width = description.index('\n')
@@ -63,11 +52,11 @@ class AirductMapFindPosition(AirductMap):
 
     @property
     def solved(self):
-        return self.map[self.to_pos] == '0'
+        return self.map[self.to_pos] == '0' and max(self.map) == "0"
 
     def move(self, dest):
         moved_map = list(self.map)
-        moved_map[self.position], moved_map[dest] = "x", "0"
+        moved_map[self.position], moved_map[dest] = ".", "0"
         return AirductMapFindPosition(self._map_to_string("".join(moved_map)), self.to_pos)
 
 def shortest_path(start):
@@ -82,7 +71,7 @@ def shortest_path(start):
         steps, grid = next_move
         if grid not in seen:
             if grid.solved:
-                return steps, grid
+                return steps
             for destination in grid.get_next_moves():
                 next_moves.append((steps + 1, grid.move(destination)))
         seen.add(grid)
@@ -90,13 +79,13 @@ def shortest_path(start):
 def main():
     with open(INPUT_FILE, 'r') as input_file:
         airducts = input_file.read()
-    print("Star 1:", shortest_path(AirductMap(airducts))[0])
+    airduct_map = AirductMap(airducts)
+    original_pos = airduct_map.position
+    steps = shortest_path(airduct_map)
+    print("Star 1:", steps)
 
-    full_map = AirductMapFullCoverage(airducts)
-    original_pos = full_map.position
-    steps_till_full, resulting_map = shortest_path(full_map)
-    steps_back_to_0, _ = shortest_path(AirductMapFindPosition(str(resulting_map), original_pos))
-    print("Star 2:", steps_till_full + steps_back_to_0)
+    steps_back_to_0 = shortest_path(AirductMapFindPosition(airducts, original_pos))
+    print("Star 2:", steps_back_to_0)
 
 if __name__ == "__main__":
     main()
