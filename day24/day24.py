@@ -43,7 +43,7 @@ class AirductMap:
         moved_map[self.position], moved_map[dest] = ".", "0"
         return AirductMap(self._map_to_string("".join(moved_map)))
 
-class AirductMapFindPosition(AirductMap):
+class AirductMapBackToPosition(AirductMap):
     def __init__(self, description, to_pos):
         self.width = description.index('\n')
         self.map = description.replace('\n', '')
@@ -57,7 +57,7 @@ class AirductMapFindPosition(AirductMap):
     def move(self, dest):
         moved_map = list(self.map)
         moved_map[self.position], moved_map[dest] = ".", "0"
-        return AirductMapFindPosition(self._map_to_string("".join(moved_map)), self.to_pos)
+        return AirductMapBackToPosition(self._map_to_string("".join(moved_map)), self.to_pos)
 
 def shortest_path(start):
     seen = set()
@@ -84,7 +84,7 @@ def main():
     steps = shortest_path(airduct_map)
     print("Star 1:", steps)
 
-    steps_back_to_0 = shortest_path(AirductMapFindPosition(airducts, original_pos))
+    steps_back_to_0 = shortest_path(AirductMapBackToPosition(airducts, original_pos))
     print("Star 2:", steps_back_to_0)
 
 if __name__ == "__main__":
