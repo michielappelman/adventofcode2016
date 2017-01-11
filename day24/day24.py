@@ -5,10 +5,11 @@
 INPUT_FILE = "day24_input.txt"
 
 class AirductMap:
-    def __init__(self, description):
+    def __init__(self, description, to_pos=None):
         self.width = description.index('\n')
         self.map = description.replace('\n', '')
         self.position = self.map.index('0')
+        self.to_pos = to_pos
 
     def __str__(self):
         return self._map_to_string(self.map)
@@ -28,7 +29,10 @@ class AirductMap:
 
     @property
     def solved(self):
-        return max(self.map) == "0"
+        if self.to_pos:
+            return self.map[self.to_pos] == '0' and max(self.map) == "0"
+        else:
+            return max(self.map) == "0"
 
     def get_next_moves(self):
         for dest in (self.position - 1, self.position + 1):
@@ -41,23 +45,7 @@ class AirductMap:
     def move(self, dest):
         moved_map = list(self.map)
         moved_map[self.position], moved_map[dest] = ".", "0"
-        return AirductMap(self._map_to_string("".join(moved_map)))
-
-class AirductMapBackToPosition(AirductMap):
-    def __init__(self, description, to_pos):
-        self.width = description.index('\n')
-        self.map = description.replace('\n', '')
-        self.position = self.map.index('0')
-        self.to_pos = to_pos
-
-    @property
-    def solved(self):
-        return self.map[self.to_pos] == '0' and max(self.map) == "0"
-
-    def move(self, dest):
-        moved_map = list(self.map)
-        moved_map[self.position], moved_map[dest] = ".", "0"
-        return AirductMapBackToPosition(self._map_to_string("".join(moved_map)), self.to_pos)
+        return AirductMap(self._map_to_string("".join(moved_map)), self.to_pos)
 
 def shortest_path(start):
     seen = set()
@@ -84,7 +72,7 @@ def main():
     steps = shortest_path(airduct_map)
     print("Star 1:", steps)
 
-    steps_back_to_0 = shortest_path(AirductMapBackToPosition(airducts, original_pos))
+    steps_back_to_0 = shortest_path(AirductMap(airducts, original_pos))
     print("Star 2:", steps_back_to_0)
 
 if __name__ == "__main__":
